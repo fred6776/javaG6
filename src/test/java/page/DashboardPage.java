@@ -1,10 +1,10 @@
 package page;
 
 import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
-import org.openqa.selenium.Keys;
+import data.DataHelper;
 
+import static com.codeborne.selenide.Condition.attribute;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
@@ -24,13 +24,13 @@ public class DashboardPage {
     private final String balanceFinish = " р.";
 
 
-    public int getCardBalance(String id) {
-        for (SelenideElement card : cards) {
-            String idFact = card.attr("data-test-id");
-            if (id.equals(idFact)) {
-                return extractBalance(card.text());
-            }
+    public int getCardBalance(DataHelper.Card id) {
+        SelenideElement card = cards.findBy(attribute("data-test-id", id.getId()));
+
+        if (card != null) {
+            return extractBalance(card.text());
         }
+
         return -1;
     }
 
@@ -41,26 +41,16 @@ public class DashboardPage {
         return Integer.parseInt(value);
     }
 
-    public void topUpCard(String id, String sum) {
-        for (SelenideElement card : cards) {
-            String idFact = card.attr("data-test-id");
-            if (id.equals(idFact)) {
-                card.$(byText("Пополнить")).click();
-
-                Selenide.$("[data-test-id=amount] input").sendKeys(Keys.CONTROL + "a", Keys.BACK_SPACE);
-                Selenide.$("[data-test-id=amount] input").setValue(sum);
-
-                String from = "5559 0000 0000 0001";
-                if (id.equals(("92df3f1c-a033-48e6-8390-206f6b1f56c0"))) {
-                    from = "5559 0000 0000 0002";
-                }
-                Selenide.$("[data-test-id=from] input").sendKeys(Keys.CONTROL + "a", Keys.BACK_SPACE);
-                Selenide.$("[data-test-id=from] input").setValue(from);
-
-                Selenide.$("[data-test-id=action-transfer]").click();
-
-                break;
-            }
+    public void topUpCardClick(DataHelper.Card id, String sum) {
+        SelenideElement card = cards.findBy(attribute("data-test-id", id.getId()));
+        if (id.equals(DataHelper.getCard1())) {
+            if (getCardBalance(DataHelper.getCard2()) - Integer.parseInt(sum) <= 0) {
+                System.out.println("Во второй карте недостаточно средств");
+            } else card.$(byText("Пополнить")).click();
+        } else if (id.equals(DataHelper.getCard2())) {
+            if (getCardBalance(DataHelper.getCard1()) - Integer.parseInt(sum) <= 0) {
+                System.out.println("В первой карте недостаточно средств");
+            } else card.$(byText("Пополнить")).click();
         }
     }
 }

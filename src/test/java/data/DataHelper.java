@@ -1,7 +1,6 @@
 package data;
 
 import lombok.Value;
-import page.DashboardPage;
 
 public class DataHelper {
     private DataHelper() {
@@ -26,38 +25,18 @@ public class DataHelper {
         return new VerificationCode("12345");
     }
 
-
     @Value
     public static class Card {
-        private String card;
+        private String number;
+        private String id;
     }
 
-    public static String getCard1() {
-        return "5559 0000 0000 0001";
+    public static Card getCard1() {
+        return new Card("5559 0000 0000 0001", "92df3f1c-a033-48e6-8390-206f6b1f56c0");
     }
 
-    public static String getCard2() {
-        return "5559 0000 0000 0002";
+    public static Card getCard2() {
+        return new Card("5559 0000 0000 0002", "0f3f5c2a-249e-4c3d-8287-09f7a039391d");
     }
 
-    public static int getCardBalance(String card) {
-        DashboardPage dash = new DashboardPage();
-        if (card.equals("5559 0000 0000 0001")) {
-            return dash.getCardBalance("92df3f1c-a033-48e6-8390-206f6b1f56c0");
-        }
-        if (card.equals("5559 0000 0000 0002")) {
-            return dash.getCardBalance("0f3f5c2a-249e-4c3d-8287-09f7a039391d");
-        }
-        return -1;
-    }
-
-    public static void topUpCard(String card, String sum) {
-        DashboardPage dash = new DashboardPage();
-        if (card.equals("5559 0000 0000 0001")) {
-            dash.topUpCard("92df3f1c-a033-48e6-8390-206f6b1f56c0", sum);
-        }
-        if (card.equals("5559 0000 0000 0002")) {
-            dash.topUpCard("0f3f5c2a-249e-4c3d-8287-09f7a039391d", sum);
-        }
-    }
 }
