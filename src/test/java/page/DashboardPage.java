@@ -43,14 +43,6 @@ public class DashboardPage {
 
     public void topUpCardClick(DataHelper.Card id, String sum) {
         SelenideElement card = cards.findBy(attribute("data-test-id", id.getId()));
-        if (id.equals(DataHelper.getCard1())) {
-            if (getCardBalance(DataHelper.getCard2()) - Integer.parseInt(sum) <= 0) {
-                System.out.println("Во второй карте недостаточно средств");
-            } else card.$(byText("Пополнить")).click();
-        } else if (id.equals(DataHelper.getCard2())) {
-            if (getCardBalance(DataHelper.getCard1()) - Integer.parseInt(sum) <= 0) {
-                System.out.println("В первой карте недостаточно средств");
-            } else card.$(byText("Пополнить")).click();
-        }
+        card.$(byText("Пополнить")).click();
     }
 }

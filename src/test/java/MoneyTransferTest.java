@@ -20,21 +20,20 @@ class MoneyTransferTest {
         var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
         verificationPage.validVerify(verificationCode);
 
-
     }
 
     @Test
     void shouldTopUpFirstCard() {
         DashboardPage dash = new DashboardPage();
-        MoneyTransferPage money = new MoneyTransferPage();
         int expected1 = dash.getCardBalance(DataHelper.getCard1());
         int expected2 = dash.getCardBalance(DataHelper.getCard2());
-        dash.topUpCardClick(DataHelper.getCard1(), "300");
-        money.topUpCard(DataHelper.getCard1(), "300");
-        expected1 += 300;
+        dash.topUpCardClick(DataHelper.getCard1(), String.valueOf(expected2));
+        MoneyTransferPage money = new MoneyTransferPage();
+        money.writeOfCard(DataHelper.getCard2(), String.valueOf(expected2));
+        expected1 += expected2;
         int actual1 = dash.getCardBalance(DataHelper.getCard1());
         Assertions.assertEquals(expected1, actual1);
-        expected2 -= 300;
+        expected2 -= expected2;
         int actual2 = dash.getCardBalance(DataHelper.getCard2());
         Assertions.assertEquals(expected2, actual2);
     }
@@ -42,17 +41,17 @@ class MoneyTransferTest {
     @Test
     void shouldTopUpSecondCard() {
         DashboardPage dash = new DashboardPage();
-        MoneyTransferPage money = new MoneyTransferPage();
         int expected1 = dash.getCardBalance(DataHelper.getCard1());
         int expected2 = dash.getCardBalance(DataHelper.getCard2());
-        dash.topUpCardClick(DataHelper.getCard2(), "400");
-        money.topUpCard(DataHelper.getCard2(), "400");
-        expected1 -= 400;
-        int actual1 = dash.getCardBalance(DataHelper.getCard1());
-        Assertions.assertEquals(expected1, actual1);
-        expected2 += 400;
+        dash.topUpCardClick(DataHelper.getCard2(), String.valueOf(expected1));
+        MoneyTransferPage money = new MoneyTransferPage();
+        money.writeOfCard(DataHelper.getCard1(), String.valueOf(expected1));
+        expected2 += expected1;
         int actual2 = dash.getCardBalance(DataHelper.getCard2());
         Assertions.assertEquals(expected2, actual2);
+        expected1 -= expected1;
+        int actual1 = dash.getCardBalance(DataHelper.getCard1());
+        Assertions.assertEquals(expected1, actual1);
     }
 
 }
